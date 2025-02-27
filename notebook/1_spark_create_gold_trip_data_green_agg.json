@@ -18,15 +18,16 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e3457c50-957b-4b8a-bff8-9dc65bc09f3b"
+				"spark.autotune.trackingId": "03dcf1ad-74b1-4aac-a968-1a83b87c4ca4"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
 			"language_info": {
 				"name": "python"
 			},
@@ -37,14 +38,13 @@
 				"endpoint": "https://synapse-course-wss.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/trippoolX",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.4",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 5
 		},
@@ -95,8 +95,10 @@
 					"#Set the folder paths so that it can be used later. \n",
 					"bronze_folder_path = 'abfss://nyc-taxi-data@synapsecoursedllll.dfs.core.windows.net/raw'\n",
 					"silver_folder_path = 'abfss://nyc-taxi-data@synapsecoursedllll.dfs.core.windows.net/silver'\n",
-					"gold_folder_path = 'abfss://nyc-taxi-data@synapsecoursedllll.dfs.core.windows.net/gold'"
-				]
+					"gold_folder_path = 'abfss://nyc-taxi-data@synapsecoursedllll.dfs.core.windows.net/gold'\n",
+					"/"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +116,8 @@
 				"source": [
 					"#Set the spark config to be able to get the partitioned columns year and month as strings rather than integers\n",
 					"spark.conf.set(\"spark.sql.sources.partitionColumnTypeInference.enabled\", \"false\")"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
