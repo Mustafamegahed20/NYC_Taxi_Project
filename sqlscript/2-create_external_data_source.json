@@ -1,0 +1,20 @@
+{
+	"name": "2-create_external_data_source",
+	"properties": {
+		"folder": {
+			"name": "Nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "USE nyc_taxi_ldw\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'nyc_taxi_src')\n    CREATE EXTERNAL DATA SOURCE nyc_tax_src\n    WITH ( LOCATION = 'https://synapsecoursedllll.dfs.core.windows.net/nyc-taxi-data')",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

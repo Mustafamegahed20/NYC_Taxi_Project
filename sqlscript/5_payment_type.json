@@ -1,0 +1,20 @@
+{
+	"name": "5_payment_type",
+	"properties": {
+		"folder": {
+			"name": "Nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "\nSELECT JSON_VALUE(BulkColumn, '$.payment_type') payment_type,\n    JSON_VALUE(BulkColumn, '$.payment_type_desc') payment_type_desc\nFROM OPENROWSET(\n    BULK 'payment_type.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    FIELDTERMINATOR = '0x0b', -- Unused character as JSON has no delimiter\n    FIELDQUOTE = '0x0b', \n    ROWTERMINATOR = '0x0a'   -- Newline character for each JSON object\n) WITH (\n    BulkColumn NVARCHAR(MAX) -- Single column for raw JSON text\n) AS payment_type;\n\n\nSELECT payment_type,payment_type_desc\nFROM OPENROWSET(\n    BULK 'payment_type.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    FIELDTERMINATOR = '0x0b', -- Unused character as JSON has no delimiter\n    FIELDQUOTE = '0x0b'\n) WITH (\n    BulkColumn NVARCHAR(MAX) -- Single column for raw JSON text\n) AS payment_type\nCROSS APPLY OPENJSON(BulkColumn)\nWITH (\n    payment_type INT,\n    payment_type_desc NVARCHAR(100)\n) AS jsonData;\n\n\n\n-------reading file from json array \n\nSELECT payment_type,payment_type_dec_value\nFROM OPENROWSET(\n    BULK 'payment_type_array.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    FIELDTERMINATOR = '0x0b', -- Unused character as JSON has no delimiter\n    FIELDQUOTE = '0x0b'\n) WITH (\n    BulkColumn NVARCHAR(MAX) -- Single column for raw JSON text\n) AS payment_type\nCROSS APPLY OPENJSON(BulkColumn)\nWITH (\n    payment_type INT,\n    payment_type_desc NVARCHAR(max) as Json\n) CROSS APPLY OPENJSON(payment_type_desc)\n WITH (\n    sub_type INT,\n    payment_type_dec_value VARCHAR(20) '$.value'\n );\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
